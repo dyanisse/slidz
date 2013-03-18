@@ -6,11 +6,16 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+	, deck = require('./routes/deck')
   , http = require('http')
   , path = require('path')
 	, mongo = require('mongodb');
 
 var app = express();
+
+/**
+ * App configuration
+ */
 
 app.configure(function(){
   app.set('port', process.env.PORT || 5000);
@@ -28,14 +33,22 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+/**
+ * App routes
+ */
+
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.post('/deck', deck.create);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-// MONGO config
+
+/**
+ * Mongo config
+ */
 var mongoUri = process.env.MONGOLAB_URI || 
   process.env.MONGOHQ_URL || 
   'mongodb://localhost/mydb'; 
