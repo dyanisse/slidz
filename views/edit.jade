@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  p #{deck.name}
+  a(href="https://s3.amazonaws.com/slidz_ppt/"+deck.s3_key) #{"Download file"}
+  p
+  button(class="btn btn-large btn-primary", type="button", onclick="update_deck();", onsucess="alert('success');") Save

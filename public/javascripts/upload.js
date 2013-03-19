@@ -9,10 +9,15 @@ function open_upload_modal() {
 	  function(FPFile){
 	    console.log(JSON.stringify(FPFile));
 			var request = $.ajax({
-						        url: "/deck",
+						        url: "/decks",
 						        type: "post",
 										contentType: "application/json",
-						        data: JSON.stringify(FPFile)
+						        data: JSON.stringify(FPFile),
+										dataType: 'json',
+										success: function(data, status, xhr){
+											var redirect_url = "/decks/"+data.id;    
+											$(location).attr('href',redirect_url);
+										}
 			});
 	  },
 	  function(FPError){
@@ -21,3 +26,8 @@ function open_upload_modal() {
 	);
 	return true;
 }
+
+// on ajax success:
+
+// var url = "/decks/id";    
+// $(location).attr('href',url);

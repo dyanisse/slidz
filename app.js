@@ -39,7 +39,10 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.post('/deck', deck.create);
+app.post('/decks', deck.create);
+app.get('/decks/:id', deck.show);
+app.put('/decks/:id', deck.update);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
@@ -53,9 +56,9 @@ var mongoUri = process.env.MONGOLAB_URI ||
   process.env.MONGOHQ_URL || 
   'mongodb://localhost/mydb'; 
 
-mongo.Db.connect(mongoUri, function (err, db) {
-  db.collection('mydocs', function(er, collection) {
-    collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
-    });
-  });
-});
+//mongo.Db.connect(mongoUri, function (err, db) {
+//  db.collection('presentations', function(er, collection) {
+//    collection.insert({'name': 'test'}, {safe: true}, function(er,rs) {
+//    });
+//  });
+//});
