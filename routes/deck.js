@@ -1,3 +1,7 @@
+var config = require('./config');
+var crypto = require('crypto');
+var https = require('https');
+
 var mongo = require('mongodb');
 var mongoUri = process.env.MONGOLAB_URI || 
   process.env.MONGOHQ_URL || 
@@ -29,8 +33,7 @@ exports.create = function(req, res){
 													'size': pres.size,
 													's3_key': pres.key
 													}, {safe: true}, function(er,rs) {
-														console.log('Success: ' + JSON.stringify(rs[0]));
-														console.log('Success2: ' + rs[0]._id);
+														console.log('Success: ' + rs[0]._id);
 														//res.redirect('decks/'+rs[0]._id);
 														// return 200 with id.
 														res.json({ id: rs[0]._id })
@@ -60,3 +63,47 @@ exports.show = function(req, res){
 exports.update = function(req, res){
   res.send("respond with resource" + req.params.id);
 };
+
+//upload to slideshare
+upload_slideshare = function(deck_url, title){
+	
+	var api_key = config.slideshare.api_key;
+	var shared_secret = config.slideshare.shared_secret;
+	var username = config.slideshare.username;
+	var password = config.slideshare.password;
+	var host = config.slideshare.host;
+	var upload_endpoint = config.slideshare.endpoints.upload;
+	
+	var date = Math.round(new Date().getTime()/1000);
+	var shasum = crypto.createHash('sha1');
+	shasum.update(shared_secret + date);
+	
+	var parameters = 'api_key=' + api_key;
+	parameters += '&hash=' + shasum.digest('hex');
+	parameters += '&ts=' + date;	
+	parameters += '&username=' + username;
+	parameters += '&password=' + password;
+	parameters += '&slideshow_title=' + title;
+	parameters += '&upload_url=' + encodeURIComponent(deck_url);
+		
+	var path = upload_endpoint + parameters;
+		
+	var options = { host: host, path: path	};
+
+	https.get(options, function(res) {
+	  console.log('STATUS: ' + res.statusCode);
+	  console.log('HEADERS: ' + JSON.stringify(res.headers));
+		res.on("data", function(chunk) {
+		    console.log("BODY: " + chunk);
+		  });
+	}).on('error', function(e) {
+	  console.log('ERROR: ' + e.message);
+	});
+	
+	// todo: parse the xml and store the slideshow_id in mongo
+	
+	// then do a get_slideshow requrest to get the url and s3 url and more data from slideshare
+	
+};
+
+
