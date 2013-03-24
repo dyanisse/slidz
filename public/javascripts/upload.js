@@ -15,8 +15,9 @@ function open_upload_modal() {
 						        data: JSON.stringify(FPFile),
 										dataType: 'json',
 										success: function(data, status, xhr){
-											var redirect_url = "/decks/"+data.id;    
-											$(location).attr('href',redirect_url);
+											//maybe a normal request non-ajax is better here
+											var redirect_url = "/decks/" + data.id;    
+											$(location).attr('href', redirect_url);
 										}
 			});
 	  },
