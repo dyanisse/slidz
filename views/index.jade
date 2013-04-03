@@ -6,5 +6,6 @@ block head
 block content
   h1= title
   p Welcome to #{title}
+  a(href="/auth/twitter") Sign in with Twitter
   button(class="btn btn-large btn-primary", type="button", onclick="open_upload_modal();", onsucess="alert('success');") Upload
   
