@@ -9,7 +9,8 @@ var express = require('express')
   , path = require('path')
 	, mongo = require('mongodb')
 	, mongoose = require('mongoose')
-	, config = require('./config')
+	, env = process.env.NODE_ENV || 'development'
+	, config = require('./config')[env]
 	, passport = require('passport');
 	
 var models_path = __dirname + '/models';
@@ -91,7 +92,7 @@ var User = mongoose.model('User');
 passport.use(new TwitterStrategy({
     consumerKey: config.twitter.consumer_key,
     consumerSecret: config.twitter.consumer_secret,
-    callbackURL: "http://localhost:5000/auth/twitter/callback"
+    callbackURL: config.twitter.callbackURL
   },
 
   function(token, tokenSecret, profile, done) {
