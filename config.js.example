@@ -14,3 +14,51 @@ config.slideshare.username = 'USERNAME'
 config.slideshare.password = 'PASSWORD'
 
 module.exports = config;
+exports = {
+	development: {
+		express: {
+			session_secret: 'SESSION_SECRET'
+		}
+		, twitter: {
+			consumer_key: 'CONSUMER_KEY'
+			, consumer_secret: 'CONSUMER_SECRET'
+			, callbackURL: "http://localhost:5000/auth/twitter/callback"
+		}
+		, slideshare: {
+			host: 'www.slideshare.net'
+			, endpoints: {
+				upload: '/api/2/upload_slideshow'
+				, get: '/api/2/get_slideshow'
+			}
+			, api_key: 'API_KEY'
+			, shared_secret: 'SHARED_SECRET'
+			, username: 'USERNAME'
+			, password: 'PASSWORD'
+		}
+		, mogreet: {		
+		}
+	}
+	, production: {
+		express: {
+			session_secret: 'SESSION_SECRET'
+		}
+		, twitter: {
+			consumer_key: 'CONSUMER_KEY'
+			, consumer_secret: 'CONSUMER_SECRET'
+			, callbackURL: "http://yourdomain.com/auth/twitter/callback"
+		}
+		, slideshare: {
+			host: 'www.slideshare.net'
+			, endpoints: {
+				upload: '/api/2/upload_slideshow'
+				, get: '/api/2/get_slideshow'	
+			}
+			, api_key: 'API_KEY'
+			, shared_secret: 'SHARED_SECRET'
+			, username: 'USERNAME'
+			, password: 'PASSWORD'
+		}
+		, mogreet: {		
+		}
+	}
+}
