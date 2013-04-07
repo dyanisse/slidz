@@ -5,7 +5,20 @@ block head
 
 block content
   h1= title
-  p Welcome to #{title}
-  a(href="/auth/twitter") Sign in with Twitter
-  button(class="btn btn-large btn-primary", type="button", onclick="open_upload_modal();", onsucess="alert('success');") Upload
-  
+  div
+    p Welcome #{name}
+    br
+    br
+  div
+    button(class="btn btn-large btn-primary", type="button", onclick="open_upload_modal();", onsucess="alert('success');") Upload
+    br
+    br
+
+  div
+   each deck in decks
+    p=deck.name
+    p #{"Slideshare URL:"}
+    a(href=deck.slideshare_url) url
+    
+  div 
+    a(class="btn btn-large btn-primary", href="/logout") Logout

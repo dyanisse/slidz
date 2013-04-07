@@ -1,78 +1,60 @@
-var config = require('../config');
-var crypto = require('crypto');
-var https = require('https');
-var xml2js = require('xml2js');
 
-var mongo = require('mongodb');
-var mongoUri = process.env.MONGOLAB_URI || 
-  process.env.MONGOHQ_URL || 
-  'mongodb://localhost/mydb';
-
-/*
- * GET files listing.
+/**
+ * Module dependencies.
  */
 
-exports.list = function(req, res){
-  res.send("respond with a resource");
-};
+var mongoose = require('mongoose')
+	, Deck = mongoose.model('Deck')
+	//move to model
+	, env = process.env.NODE_ENV || 'development'
+	, config = require('../config')[env]
+	, crypto = require('crypto')
+	, https = require('https')
+	, xml2js = require('xml2js')
 
-/*
- * POST new file.
+/**
+ * Create comment
  */
 
-exports.create = function(req, res){
+exports.create = function (req, res) {
+  var user = req.user
+	var deck =  new Deck()
 	console.log(req.body[0]);
+	
+	if (!req.body[0]) return res.redirect('/')
+	
 	var pres = req.body[0];
 	var file_url = "https://s3.amazonaws.com/slidz_ppt/" + pres.key;
+	
+	//move to model: deck = new Deck(file_url)
 	upload_slideshare(file_url, "test", function(xml) {
 		parse_slide_id(xml, function(id) {
 			get_slideshare(id, function(xml) {
 				parse_slide_url(xml, function(url) {
-				//put mongo insert in a function
-					mongo.Db.connect(mongoUri, function (err, db) {
-	  				db.collection('presentations', function(er, collection) {
-							//todo: strip extension on name
-	    				collection.insert(
-								{	'name': pres.filename,
-								'user_id': 1,
-				 				'fp_url': pres.url, 
-								'filename': pres.filename,
-								'mimetype': pres.mimetype,
-								'size': pres.size,
-								's3_key': pres.key, 
-								'slideshare_id': Number(id),
-								'slideshare_url': url },
-								{ safe: true }, 
-		  					function(er,rs) {
-									console.log('Successful insert in mongo obj_id: ' + rs[0]._id);
-									// return 200 with id.
-									res.json({ id: rs[0]._id });
-								});
-							});
-						});
-					});
-				});								
-	  });
-	});
-};
+					deck.name = pres.filename
+					deck.fp_url = pres.url
+					deck.filename = pres.filename
+					deck.mimetype = pres.mimetype
+					deck.size = pres.size
+					deck.s3_key = pres.key
+					deck.slideshare_id = Number(id)
+					deck.slideshare_url = url
 
-
-exports.show = function(req, res){
-	deck = null;
-	mongo.Db.connect(mongoUri, function (err, db) {
-	  db.collection('presentations', function(er, collection) {
-		//todo: strip extension on name
-		collection.findOne({'_id':new mongo.BSONPure.ObjectID(req.params.id)}, function(err, item) {
-								deck = item;
-								res.render('edit', {title: item.name, deck: item });
-		        });
+					deck.save(function (err) {
+				    if (err)return console.error(err.stack)
+						user.decks.push(deck)
+						user.save(function (err) {
+					    if (err) return console.error(err.stack)
+							console.log('Successful insert in mongo obj_id: ' + deck._id);
+							// return 200 with id.
+							res.json({ id: deck._id });
+					  });
+				  });
+				});
 			});
+		});
 	});
-};
-
-exports.update = function(req, res){
-  res.send("respond with resource" + req.params.id);
-};
+}
 
 //upload to slideshare
 upload_slideshare = function(deck_url, title, callback){
@@ -150,8 +132,7 @@ get_slideshare = function(id, callback){
 parse_slide_id = function(xml, callback){
 	var parseString = require('xml2js').parseString;
 	parseString(xml, function (err, result) {
-			var id = result['SlideShowUploaded']['SlideShowID'][0];
-	    console.log('YESSSSS ID: ' + id);
+			var id = result['SlideShowUploaded']['SlideShowID'][0]; //'17602611'
 			callback(id);
 	});
 };
@@ -159,10 +140,11 @@ parse_slide_id = function(xml, callback){
 parse_slide_url = function(xml, callback){
 	var parseString = require('xml2js').parseString;
 	parseString(xml, function (err, result) {
-			var url = result['Slideshow']['URL'][0];
+			var url = result['Slideshow']['URL'][0]; //'http://www.slideshare.net/danielyanisse/test-17602611'
 	    console.log(url);
 			callback(url);
 	});
 };
+
 
 

@@ -22,22 +22,12 @@ var mongoose = require('mongoose')
 	 */
 
 	exports.login = function (req, res) {
-	  res.render('users/login', {
-	    title: 'Login',
-	    message: req.flash('error')
+	  res.render('login', {
+	    title: 'Welcome to Slidz',
+	    //message: req.flash('error')
 	  })
 	}
 
-	/**
-	 * Show sign up form
-	 */
-
-	exports.signup = function (req, res) {
-	  res.render('users/signup', {
-	    title: 'Sign up',
-	    user: new User()
-	  })
-	}
 
 	/**
 	 * Logout

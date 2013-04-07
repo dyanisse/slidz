@@ -11,7 +11,9 @@ var express = require('express')
 	, mongoose = require('mongoose')
 	, env = process.env.NODE_ENV || 'development'
 	, config = require('./config')[env]
-	, passport = require('passport');
+	, auth = require('./authorization')
+	, passport = require('passport')
+	, flash = require('connect-flash')
 	
 var models_path = __dirname + '/models';
 fs.readdirSync(models_path).forEach(function (file) {
@@ -42,6 +44,23 @@ app.configure(function(){
   app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(app.router);
+	app.use(flash());
+	app.use(function(err, req, res, next){
+    // treat as 404
+    if (~err.message.indexOf('not found')) return next()
+
+    // log it
+    console.error(err.stack)
+
+    // error page
+    res.status(500).render('500', { error: err.stack })
+  })
+
+  // assume 404 since no middleware responded
+  app.use(function(req, res, next){
+    res.status(404).render('404', { url: req.originalUrl })
+  })
+	
 });
 
 app.configure('development', function(){
@@ -52,12 +71,11 @@ app.configure('development', function(){
  * App routes
  */
 
-app.get('/', routes.index);
-app.post('/decks', deck.create);
-app.get('/decks/:id', deck.show);
-app.put('/decks/:id', deck.update);
+app.get('/', auth.requiresLogin, routes.index);
+app.post('/decks', auth.requiresLogin, deck.create);
+//app.get('/decks/:id', auth.requiresLogin, deck.show);
+//app.put('/decks/:id', auth.requiresLogin. deck.update);
 app.get('/login', user.login);
-app.get('/signup', user.signup);
 app.get('/logout', user.logout);
 app.get('/users/:userId', user.show);
 app.get('/auth/twitter', passport.authenticate('twitter', { failureRedirect: '/login' }), user.signin);
