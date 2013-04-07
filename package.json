@@ -9,6 +9,7 @@
     "express": "latest",
     "jade": "latest", 
 	"mongo": "latest",
+	"mongodb": "latest",
 	"mongoose": "latest",
 	"xml2js": "latest",
 	"passport": "latest", 
@@ -16,6 +17,7 @@
 	"passport-facebook": "latest", 
 	"passport-twitter": "latest", 
 	"passport-github": "latest",
-	"underscore": "latest"
+	"underscore": "latest",
+	"connect-flash": "latest"
   }
 }

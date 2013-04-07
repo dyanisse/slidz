@@ -16,7 +16,7 @@ function open_upload_modal() {
 										dataType: 'json',
 										success: function(data, status, xhr){
 											//maybe a normal request non-ajax is better here
-											var redirect_url = "/decks/" + data.id;    
+											var redirect_url = "/";    
 											$(location).attr('href', redirect_url);
 										}
 			});
