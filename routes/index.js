@@ -12,6 +12,6 @@ exports.index = function(req, res){
 	  if (err) return console.error(err.stack)
 	  console.log('The creator is %s', user.decks[0]);
 	  // prints "The creator is Aaron"
-	  res.render('index', { title: 'Slidz', name: user.name, decks: user.decks });
+	  res.render('index', { title: 'Slidz', name: user.name.split(' ')[0], decks: user.decks });
 	})
 };

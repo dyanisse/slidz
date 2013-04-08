@@ -35,7 +35,10 @@ exports = {
 			, username: 'USERNAME'
 			, password: 'PASSWORD'
 		}
-		, mogreet: {		
+		, mogreet: {
+			client_id: 'CLIENT_ID'
+			token: 'SECRET_TOKEN'
+			mms_campaign_id: 'CAMPAIGN_ID'	
 		}
 	}
 	, production: {
@@ -58,7 +61,10 @@ exports = {
 			, username: 'USERNAME'
 			, password: 'PASSWORD'
 		}
-		, mogreet: {		
+		, mogreet: {
+			client_id: 'CLIENT_ID'
+			token: 'SECRET_TOKEN'
+			mms_campaign_id: 'CAMPAIGN_ID'
 		}
 	}
 }

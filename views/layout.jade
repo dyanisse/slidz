@@ -3,9 +3,11 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/flat-ui.css')
+    link(rel='stylesheet', href='/stylesheets/font-awesome.css')
     script(type="text/javascript", src="http://code.jquery.com/jquery-1.9.1.min.js")
     script(type="text/javascript", src="//api.filepicker.io/v1/filepicker.js")
     block head
   body
-    block content
+    .container
+      block content
