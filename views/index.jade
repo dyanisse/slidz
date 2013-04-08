@@ -6,19 +6,42 @@ block head
 block content
   h1= title
   div
-    p Welcome #{name}
+    h4 Welcome #{name}
     br
     br
   div
-    button(class="btn btn-large btn-primary", type="button", onclick="open_upload_modal();", onsucess="alert('success');") Upload
+    button(class="btn btn-large btn-success", type="button", onclick="open_upload_modal();", onsucess="alert('success');") 
+      i(class="icon-cloud-upload") 
+      span Upload
+    br
     br
     br
 
   div
-   each deck in decks
-    p=deck.name
-    p #{"Slideshare URL:"}
-    a(href=deck.slideshare_url) url
+   h2 My slides
+   br
+   br
+   table(class="table")
+     tbody
+       each deck in decks
+        tr
+          td(width="20%")
+            label(class="share-label") #{deck.name}
+          td(width="15%")
+            a(class="share-label", href="deck.slideshare_url", target="_blank") slideshare
+          td(width="15%")
+            a(class="share-label", href="https://s3.amazonaws.com/slidz_ppt/#{deck.s3_key}", target="_blank") download
+          td(width="35%")
+            label(class="share-label") Text ASKZ to 343434
+          td(width="15%")
+            a(class="btn btn-warning", href="/") 
+              i(class="fui-new-16") 
+              span &nbsp edit
+    br
+    br
+    br
     
   div 
-    a(class="btn btn-large btn-primary", href="/logout") Logout
+    a(class="btn btn-large btn-info", href="/logout") 
+      i(class="icon-signout") 
+      span Logout
