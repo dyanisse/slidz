@@ -20,7 +20,8 @@ var DeckSchema = new Schema({
 	size: Number,
 	s3_key: String,
 	slideshare_id: Number,
-	slideshare_url: String
+	slideshare_url: String,
+	keyword: String
 })
 
 mongoose.model('Deck', DeckSchema)
