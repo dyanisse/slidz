@@ -24,36 +24,59 @@ exports.create = function (req, res) {
 	if (!req.body[0]) return res.redirect('/')
 	
 	var pres = req.body[0];
-	var file_url = "https://s3.amazonaws.com/slidz_ppt/" + pres.key;
+	var file_url = config.s3.bucket + "/" + pres.key;
 	
 	//move to model: deck = new Deck(file_url)
 	upload_slideshare(file_url, "test", function(xml) {
 		parse_slide_id(xml, function(id) {
 			get_slideshare(id, function(xml) {
 				parse_slide_url(xml, function(url) {
-					deck.name = pres.filename
-					deck.fp_url = pres.url
-					deck.filename = pres.filename
-					deck.mimetype = pres.mimetype
-					deck.size = pres.size
-					deck.s3_key = pres.key
-					deck.slideshare_id = Number(id)
-					deck.slideshare_url = url
-
-					deck.save(function (err) {
-				    if (err)return console.error(err.stack)
-						user.decks.push(deck)
-						user.save(function (err) {
-					    if (err) return console.error(err.stack)
-							console.log('Successful insert in mongo obj_id: ' + deck._id);
-							// return 200 with id.
-							res.json({ id: deck._id });
+					create_mogreet_app(pres.filename, function(keyword) {
+						deck.name = pres.filename
+						deck.fp_url = pres.url
+						deck.filename = pres.filename
+						deck.mimetype = pres.mimetype
+						deck.size = pres.size
+						deck.s3_key = pres.key
+						deck.slideshare_id = Number(id)
+						deck.slideshare_url = url
+						deck.keyword = keyword
+						
+						deck.save(function (err) {
+				    	if (err)return console.error(err.stack)
+							user.decks.push(deck)
+							user.save(function (err) {
+					    	if (err) return console.error(err.stack)
+								console.log('Successful insert in mongo obj_id: ' + deck._id);
+								// return 200 with id.
+								res.json({ id: deck._id });
+							});
 					  });
 				  });
 				});
 			});
 		});
 	});
+}
+
+exports.update = function (req, res) {
+	var deck = req.profile
+	console.log("Loaded Deck: " + deck.keyword);
+}
+
+/**
+ * Find deck by id
+ */
+
+exports.deck = function (req, res, next, id) {
+  Deck
+    .findOne({ _id : id })
+    .exec(function (err, deck) {
+      if (err) return next(err)
+      if (!deck) return next(new Error('Failed to load Deck ' + id))
+      req.profile = deck
+      next()
+    })
 }
 
 //upload to slideshare
@@ -146,5 +169,50 @@ parse_slide_url = function(xml, callback){
 	});
 };
 
+//upload to slideshare
+create_mogreet_app = function(filename, callback){
+	//find keyword available
+	mogreet_add_keyword(function (keyword, err) {
+		if (err) return console.error(err)
+			console.log("Available Mogreet keyword: " + keyword);
+		//add this keyword
+		//mogreet_add_keyword(keyword, function (err) {
+    	//if (err) return console.error("Error when adding keyword")
+			//console.log("Added keyword: " + keyword);
+			callback(keyword);
+	});
+};
 
+mogreet_add_keyword = function(callback){
+	var keyword = ""
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	for( var i=0; i < 3; i++ )
+		keyword += possible.charAt(Math.floor(Math.random() * possible.length))
+	var host = config.mogreet.host;
+	var parameters = '?client_id=' + config.mogreet.client_id;
+	parameters += '&token=' + config.mogreet.secret_token;
+	parameters += '&campaign_id=' + config.mogreet.mms_campaign_id;
+	parameters += '&keyword=' + keyword;
 
+	var path = config.mogreet.endpoints.keyword_add + parameters;
+	console.log("URL: " + host + path);
+	var options = { host: host, path: path	};
+
+	https.get(options, function(res) {
+		res.on("data", function(xml) {
+			console.log("BODY: " + xml);
+			var parseString = require('xml2js').parseString;
+			parseString(xml, function (err, result) {
+					console.dir(result);
+					var code = result['response']['$']['code']
+					console.log("code: " + code);
+					if (code == "1")
+						callback(keyword);
+					else if (code == "448")
+						mogreet_add_keyword(callback)
+					else
+						callback("", "Error (billing & keyword)")
+			});
+		});
+	});
+}

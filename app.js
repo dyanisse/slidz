@@ -74,13 +74,14 @@ app.configure('development', function(){
 app.get('/', auth.requiresLogin, routes.index);
 app.post('/decks', auth.requiresLogin, deck.create);
 //app.get('/decks/:id', auth.requiresLogin, deck.show);
-//app.put('/decks/:id', auth.requiresLogin. deck.update);
+app.put('/decks/:deckId', auth.requiresLogin, deck.update);
 app.get('/login', user.login);
 app.get('/logout', user.logout);
 app.get('/users/:userId', user.show);
 app.get('/auth/twitter', passport.authenticate('twitter', { failureRedirect: '/login' }), user.signin);
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), user.authCallback);
 app.param('userId', user.user)
+app.param('deckId', deck.deck)
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

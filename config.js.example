@@ -35,10 +35,18 @@ exports = {
 			, username: 'USERNAME'
 			, password: 'PASSWORD'
 		}
+		, s3: {
+		  bucket: "https://s3.amazonaws.com/slidz_ppt"
+		}
 		, mogreet: {
-			client_id: 'CLIENT_ID'
-			token: 'SECRET_TOKEN'
-			mms_campaign_id: 'CAMPAIGN_ID'	
+			host: 'api.mogreet.com'
+			, endpoints: {
+				keyword_check: '/cm/keyword.check'
+				, keyword_add: '/cm/keyword.add'
+			}
+			, client_id: 'CLIENT_ID'
+			, secret_token: 'TOKEN'
+			, mms_campaign_id: 'CAMPAIGN_ID'
 		}
 	}
 	, production: {
@@ -61,10 +69,18 @@ exports = {
 			, username: 'USERNAME'
 			, password: 'PASSWORD'
 		}
+		, s3: {
+		  bucket: "https://s3.amazonaws.com/slidz_ppt"
+		}
 		, mogreet: {
-			client_id: 'CLIENT_ID'
-			token: 'SECRET_TOKEN'
-			mms_campaign_id: 'CAMPAIGN_ID'
+			host: 'api.mogreet.com'
+			, endpoints: {
+				keyword_check: '/cm/keyword.check'
+				, keyword_add: '/cm/keyword.add'
+			}
+			, client_id: 'CLIENT_ID'
+			, secret_token: 'TOKEN'
+			, mms_campaign_id: 'CAMPAIGN_ID'
 		}
 	}
 }

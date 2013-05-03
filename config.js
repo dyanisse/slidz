@@ -19,7 +19,18 @@ module.exports = {
 			, username: 'danielyanisse'
 			, password: 'Danysurf88'
 		}
-		, mogreet: {		
+		, s3: {
+		  bucket: "https://s3.amazonaws.com/slidz_ppt"
+		}
+		, mogreet: {
+			host: 'api.mogreet.com'
+			, endpoints: {
+				keyword_check: '/cm/keyword.check'
+				, keyword_add: '/cm/keyword.add'
+			}
+			, client_id: '2250'
+			, secret_token: 'fe135bda44d0205630ff11df08c2814a'
+			, mms_campaign_id: '35866'
 		}
 	}
 	, production: {
@@ -42,7 +53,18 @@ module.exports = {
 			, username: 'danielyanisse'
 			, password: 'Danysurf88'
 		}
-		, mogreet: {		
+		, s3: {
+		  bucket: "https://s3.amazonaws.com/slidz_ppt"
+		}
+		, mogreet: {
+			host: 'api.mogreet.com'
+			, endpoints: {
+				keyword_check: '/cm/keyword.check'
+				, keyword_add: '/cm/keyword.add'
+			}
+			, client_id: '2250'
+			, secret_token: 'fe135bda44d0205630ff11df08c2814a'
+			, mms_campaign_id: '35866'		
 		}
 	}
 }
