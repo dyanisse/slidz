@@ -28,11 +28,11 @@ block content
           td(width="20%")
             label(class="share-label") #{deck.name}
           td(width="15%")
-            a(class="share-label", href="deck.slideshare_url", target="_blank") slideshare
+            a(class="share-label", href="#{deck.slideshare_url}", target="_blank") slideshare
           td(width="15%")
             a(class="share-label", href="https://s3.amazonaws.com/slidz_ppt/#{deck.s3_key}", target="_blank") download
           td(width="35%")
-            label(class="share-label") Text ASKZ to 343434
+            label(class="share-label") Text #{deck.keyword} to 343434
           td(width="15%")
             a(class="btn btn-warning", href="/") 
               i(class="fui-new-16") 
