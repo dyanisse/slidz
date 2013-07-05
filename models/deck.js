@@ -21,7 +21,7 @@ var DeckSchema = new Schema({
 	s3_key: String,
 	slideshare_id: Number,
 	slideshare_url: String,
-	keyword: String
+    hash: String
 })
 
 mongoose.model('Deck', DeckSchema)
