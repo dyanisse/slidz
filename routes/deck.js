@@ -22,8 +22,7 @@ exports.create = function (req, res) {
     console.log(req.body[0]);
 	
     if (!req.body[0]) return res.redirect('/')
-	
-<<<<<<< HEAD
+
     var pres = req.body[0];
     var file_url = config.s3.bucket + "/" + pres.key;
 	
@@ -77,42 +76,6 @@ exports.deck = function (req, res, next, id) {
         req.profile = deck
         next()
     })
-=======
-	var pres = req.body[0];
-	var file_url = config.s3.bucket + "/" + pres.key;
-	
-	//move to model: deck = new Deck(file_url)
-	upload_slideshare(file_url, "test", function(xml) {
-		parse_slide_id(xml, function(id) {
-			get_slideshare(id, function(xml) {
-				parse_slide_url(xml, function(url) {
-					create_mogreet_app(pres.filename, function(keyword) {
-						deck.name = pres.filename
-						deck.fp_url = pres.url
-						deck.filename = pres.filename
-						deck.mimetype = pres.mimetype
-						deck.size = pres.size
-						deck.s3_key = pres.key
-						deck.slideshare_id = Number(id)
-						deck.slideshare_url = url
-						deck.keyword = keyword
-						
-						deck.save(function (err) {
-				    	if (err)return console.error(err.stack)
-							user.decks.push(deck)
-							user.save(function (err) {
-					    	if (err) return console.error(err.stack)
-								console.log('Successful insert in mongo obj_id: ' + deck._id);
-								// return 200 with id.
-								res.json({ id: deck._id });
-							});
-					  });
-				  });
-				});
-			});
-		});
-	});
->>>>>>> 9130d39772e35909df3b4b89243f66e96973e96e
 }
 
 exports.update = function (req, res) {
